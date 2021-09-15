@@ -57,7 +57,7 @@ def detect_and_predict_mask(frame, faceNet, maskNet):
             faces.append(face)
             locs.append((startX, startY, endX, endY))
 
-     if len(faces) > 0:
+    if len(faces) > 0:
         # for faster inference we'll make batch predictions on *all*
         # faces at the same time rather than one-by-one predictions
         # in the above `for` loop
