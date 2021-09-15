@@ -56,3 +56,49 @@ def detect_and_predict_mask(frame, faceNet, maskNet):
             # lists
             faces.append(face)
             locs.append((startX, startY, endX, endY))
+
+     if len(faces) > 0:
+        # for faster inference we'll make batch predictions on *all*
+        # faces at the same time rather than one-by-one predictions
+        # in the above `for` loop
+        faces = np.array(faces, dtype="float32")
+        preds = maskNet.predict(faces, batch_size=32)
+
+    # return a 2-tuple of the face locations and their corresponding
+    # locations
+    return (locs, preds)
+#comment ca il n plus? oui j'ai compris, alors ou ecqu'il est maintenant, effacer,
+#  tout les fichiers sont dans un dossier "mask_det" donc on effacer le face+detector, ca pourait
+# comprendre l'emplacement
+# #montre moi ou 
+prototxtPath = "face_detector/deploy.prototxt"
+weightsPath =  "face_detector/res10_300x300_ssd_iter_140000.caffemodel"
+faceNet = cv2.dnn.readNet(prototxtPath, weightsPath)
+
+# load the face mask detector model from disk
+print("[INFO] loading face mask detector model...")
+maskNet = load_model("MaskDetector.h5")
+
+# initialize the video stream and allow the camera sensor to warm up
+print("[INFO] starting video stream...")
+vs = VideoStream(src=0).start()
+time.sleep(2.0)
+
+# loop over the frames from the video stream
+while True:
+    # grab the frame from the threaded video stream and resize it
+    # to have a maximum width of 400 pixels
+    frame = vs.read()
+    frame = imutils.resize(frame, width=500)
+
+    # detect faces in the frame and determine if they are wearing a
+    # face mask or not
+    (locs, preds) = detect_and_predict_mask(frame, faceNet, maskNet)
+
+    # loop over the detected face locations and their corresponding
+    # locations
+    pds =[]
+    for (box, pred) in list(zip(locs, preds)):
+        # unpack the bounding box and predictions
+        (startX, startY, endX, endY) = box
+        (mask, withoutMask) = pred
