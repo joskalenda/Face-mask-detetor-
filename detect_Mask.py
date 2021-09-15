@@ -102,3 +102,32 @@ while True:
         # unpack the bounding box and predictions
         (startX, startY, endX, endY) = box
         (mask, withoutMask) = pred
+
+         # determine the class label and color we'll use to draw
+        # the bounding box and text
+        if mask > withoutMask:
+            label = "Mask Detected."
+            color = (0, 255, 0)
+
+        else:
+            label = "No Mask Detected"
+            color = (0, 0, 255)
+        
+        # display the label and bounding box rectangle on the output
+        # frame
+        cv2.putText(frame, label, (startX-50, startY - 10),
+            cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2)
+        cv2.rectangle(frame, (startX, startY), (endX, endY), color, 2)
+
+    # show the output frame  LE MASK DETECTOR EST MAL ECRIS AUSSI PAR RAPPORT FICHIER DESSUS, 
+    # ca c pas vraiment un proble, c just un label ET SI ON INSTALLER CV2 IMSHOW COMME LE DIT LE TERMINAL?
+    cv2.imshow("Mask Detector", frame)
+    key = cv2.waitKey(1) & 0xFF
+
+    # if the `q` key was pressed, break from the loop
+    if key == ord("q"):
+        break
+
+# do a bit of cleanup
+cv2.destroyAllWindows()
+vs.stop()
