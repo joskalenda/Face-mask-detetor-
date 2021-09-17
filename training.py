@@ -14,3 +14,24 @@ width = 224
 height = 224
 data_dir = r"dataset"
 print("[INFO] loading images...")
+
+training = tf.keras.preprocessing.image_dataset_from_directory(
+	data_dir,
+	validation_split=0.3,
+	subset='training',
+	seed=SD,
+	image_size=(height, width),
+	batch_size=BS
+)
+
+validation = tf.keras.preprocessing.image_dataset_from_directory(
+	data_dir,
+	validation_split=0.3,
+	subset='validation',
+	seed = SD,
+	image_size=(height, width),
+	batch_size=BS,
+)
+
+classes = training.class_names
+classes
