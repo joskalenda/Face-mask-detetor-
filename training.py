@@ -58,3 +58,7 @@ predictions = model.predict(image_array)
 score = tf.nn.softmax(predictions[0])
 
 print(score)
+
+print("[INFO] saving mask detector model...")
+# model.save("MaskDetector.h5")
+model.save('MaskDetector.model', save_format="h5")
